@@ -45,5 +45,5 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-# Output files
-*.csv
+# PID files
+*.pid

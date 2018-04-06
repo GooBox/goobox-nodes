@@ -35,6 +35,7 @@ def push(*args, **kwargs) -> List[List[str]]:
 @command(command_type=CommandType.SHELL,
          args=((('-i', '--image'), {'help': 'Docker image name', 'default': IMAGE_NAME}),
                (('-t', '--tag'), {'help': 'Docker tag', 'default': 'latest'}),
+               (('-p', '--port'), {'help': 'App port', 'default': '8000'}),
                (('--source',), {'help': 'Bind source code as docker volume', 'action': 'store_true'})),
          parser_opts={'help': 'Run command through entrypoint'})
 def run(*args, **kwargs) -> List[List[str]]:
@@ -44,7 +45,9 @@ def run(*args, **kwargs) -> List[List[str]]:
     if kwargs['source']:
         volumes += ['-v', f'{os.getcwd()}:{APP_PATH}']
 
-    return [shlex.split(f'docker run') + volumes + image + list(args)]
+    port = ['-p', f'{kwargs["port"]}:8000']
+
+    return [shlex.split(f'docker run') + port + volumes + image + list(args)]
 
 
 @command(command_type=CommandType.SHELL,

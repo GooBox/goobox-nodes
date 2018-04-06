@@ -1,7 +1,7 @@
 FROM python:3.6-alpine
 LABEL maintainer="GooBox"
 
-ENV APP=goobox-nodes-scraper
+ENV APP=goobox-nodes-api
 ENV BASEDIR=/srv/apps/$APP
 ENV APPDIR=$BASEDIR/app
 ENV LOGDIR=$BASEDIR/logs
@@ -10,7 +10,7 @@ ENV PYTHONPATH=$PYTHONPATH:$APPDIR
 
 # Install system dependencies
 #ENV RUNTIME_PACKAGES
-ENV BUILD_PACKAGES build-base
+ENV BUILD_PACKAGES build-base postgresql-dev
 #RUN apk --no-cache add $RUNTIME_PACKAGES
 
 # Create initial dirs

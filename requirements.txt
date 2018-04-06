@@ -1,3 +1,14 @@
 ## System dependencies and utilities
 clinner
 health_check
+
+## Apistar
+apistar[asyncio]
+
+## ORM
+sqlalchemy
+psycopg2
+
+## Static files
+whitenoise
+aiofiles
