@@ -10,7 +10,7 @@ To run _Goobox Nodes API_ you need previously to install the requirements and yo
 1. *Docker:* Install it following [official docs](https://docs.docker.com/engine/installation/).
 
 ### Use public image
-You can use public docker image to run the service. E.g. run Storj nodes scraper, collect them and put together into a csv format file:
+You can use public docker image to run the service.
 
     docker run -p 80:80 goobox/goobox-nodes-api:latest start
 
@@ -35,4 +35,4 @@ Also, each command has its own help.
  
 ## License
 
-[GNU GPL v3](https://github.com/GooBox/goobox-nodes-scraper/blob/master/LICENSE)
+[GNU GPL v3](https://github.com/GooBox/goobox-nodes-api/blob/master/LICENSE)
