@@ -18,4 +18,9 @@ settings = {
     'RENDERERS': (
         JSONRenderer(),
     ),
+    'SCHEMA': {
+        'TITLE': 'GooBox Nodes',
+        'DESCRIPTION': 'API for exposing GooBox nodes info',
+        'URL': 'https://nodes.goobox.com',
+    }
 }

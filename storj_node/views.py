@@ -20,6 +20,7 @@ async def create_node(session: Session, storj_node: types.StorjNode) -> Response
     """
     node = models.StorjNode(**storj_node)
     session.add(node)
+    session.flush()
     return Response({'id': node.id}, status=201)
 
 
@@ -32,6 +33,15 @@ async def retrieve_node(session: Session, node_id: str) -> types.StorjNode:
         raise NotFound
 
     return types.StorjNode(node)
+
+
+async def update_node(session: Session, node_id: str, storj_node: types.StorjNode) -> Response:
+    """
+    Update a Storj node.
+    """
+    node = session.query(models.StorjNode).filter(id=node_id).update(storj_node)
+    session.flush()
+    return Response({'id': node.id}, status=200)
 
 
 async def delete_node(session: Session, node_id: str):
