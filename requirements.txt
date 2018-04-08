@@ -8,6 +8,8 @@ apistar[asyncio]
 ## ORM
 sqlalchemy
 psycopg2
+alembic
+apistar_alembic_migrations
 
 ## Static files
 whitenoise

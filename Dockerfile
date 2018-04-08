@@ -9,9 +9,9 @@ ENV LOGDIR=$BASEDIR/logs
 ENV PYTHONPATH=$PYTHONPATH:$APPDIR
 
 # Install system dependencies
-#ENV RUNTIME_PACKAGES
+ENV RUNTIME_PACKAGES libpq
 ENV BUILD_PACKAGES build-base postgresql-dev
-#RUN apk --no-cache add $RUNTIME_PACKAGES
+RUN apk --no-cache add $RUNTIME_PACKAGES
 
 # Create initial dirs
 RUN mkdir -p $APPDIR $LOGDIR

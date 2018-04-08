@@ -10,25 +10,34 @@ from clinner.command import Type as CommandType, command
 from clinner.run import Main as ClinnerMain
 
 PYTHON = 'python3.6'
+APISTAR = 'apistar'
 UVICORN = 'uvicorn'
 APP = 'goobox_nodes_api'
 
 
 @command(command_type=CommandType.SHELL,
+         parser_opts={'help': 'Run apistar command'})
+def apistar(*args, **kwargs) -> List[List[str]]:
+    return [[APISTAR] + list(args)]
+
+
+@command(command_type=CommandType.SHELL,
          parser_opts={'help': 'Start server'})
 def start(*args, **kwargs) -> List[List[str]]:
-    return [shlex.split(
-        f'{UVICORN} '
-        f'{APP}.app:app '
-        f'--workers=4 '
-        f'--bind={os.environ["APP_HOST"]}:{os.environ["APP_PORT"]} '
-        f'--pid=uvicorn.pid') + list(args)]
+    cmd = shlex.split(f'{UVICORN} '
+                      f'app:app '
+                      f'--workers=4 '
+                      f'--bind={os.environ["APP_HOST"]}:{os.environ["APP_PORT"]} '
+                      f'--pid=uvicorn.pid')
+    cmd += list(args)
+    return [cmd]
 
 
 class Main(ClinnerMain):
     commands = (
         'clinner.run.commands.pytest.pytest',
         'clinner.run.commands.prospector.prospector',
+        'apistar',
         'start',
     )
 

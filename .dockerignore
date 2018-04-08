@@ -2,3 +2,4 @@
 .pytest_cache/
 .test_report/
 .coverage
+.data/

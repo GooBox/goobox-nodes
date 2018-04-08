@@ -1,0 +1,31 @@
+version: '3'
+services:
+  api:
+    image: goobox/goobox-nodes-api:latest
+    command: ["start"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/srv/apps/goobox-nodes-api/app
+      - ./logs/goobox-nodes-api:/srv/apps/goobox-nodes-api/logs
+    links:
+      - postgres
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+
+  postgres:
+    image: postgres:alpine
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - ./.data/pgdata:/var/lib/postgresql/data/pgdata
+      - ./logs/postgresql:/var/log/postgresql
