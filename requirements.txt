@@ -4,6 +4,7 @@ health_check
 
 ## Apistar
 apistar[asyncio]
+apistar-crud
 
 ## ORM
 sqlalchemy

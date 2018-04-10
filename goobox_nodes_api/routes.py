@@ -3,7 +3,7 @@ from typing import Dict
 from apistar import Include, Route, annotate
 from apistar.handlers import docs_urls, static_urls
 
-import storj_node.routes
+from storj_node.views import StorjNode
 
 
 @annotate(authentication=None, permissions=None, exclude_from_schema=True)
@@ -20,5 +20,5 @@ routes = [
     Route('/', 'GET', root),
     Include('/docs', docs_urls),
     Include('/static', static_urls),
-    Include('/storj_node', storj_node.routes.routes, namespace='storj_node'),
+    Include('/storj_node', StorjNode.routes, namespace='storj_node'),
 ]
