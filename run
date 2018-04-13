@@ -25,12 +25,19 @@ def apistar(*args, **kwargs) -> List[List[str]]:
          parser_opts={'help': 'Start server'})
 def start(*args, **kwargs) -> List[List[str]]:
     cmd = shlex.split(f'{UVICORN} '
-                      f'app:app '
+                      f'{APP}.app:app '
                       f'--workers=4 '
                       f'--bind={os.environ["APP_HOST"]}:{os.environ["APP_PORT"]} '
                       f'--pid=uvicorn.pid')
     cmd += list(args)
     return [cmd]
+
+
+@command(command_type=CommandType.PYTHON,
+         parser_opts={'help': 'Start development server'})
+def development(*args, **kwargs):
+    from goobox_nodes_api.app import app
+    app.serve('0.0.0.0', 8000, use_debugger=True, use_reloader=True)
 
 
 class Main(ClinnerMain):
@@ -39,6 +46,7 @@ class Main(ClinnerMain):
         'clinner.run.commands.prospector.prospector',
         'apistar',
         'start',
+        'development',
     )
 
     def inject_app_settings(self):

@@ -3,6 +3,7 @@ clinner
 health_check
 
 ## Apistar
+uvicorn
 apistar[asyncio]
 apistar-crud
 

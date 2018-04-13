@@ -1,12 +1,10 @@
 from typing import Dict
 
-from apistar import Include, Route, annotate
-from apistar.handlers import docs_urls, static_urls
+from apistar import Include, Route
 
 from storj_node.views import StorjNode
 
 
-@annotate(authentication=None, permissions=None, exclude_from_schema=True)
 async def root() -> Dict:
     """
     Welcome view.
@@ -17,8 +15,6 @@ async def root() -> Dict:
 
 
 routes = [
-    Route('/', 'GET', root),
-    Include('/docs', docs_urls),
-    Include('/static', static_urls),
-    Include('/storj_node', StorjNode.routes, namespace='storj_node'),
+    Route('/', 'GET', root, name='root'),
+    Include('/storj_node', 'storj_node', StorjNode.routes),
 ]
