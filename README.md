@@ -1,9 +1,12 @@
 # Goobox Nodes
 
+![Generic badge](https://img.shields.io/badge/Project-Goobox-blue.svg)
+![Generic badge](https://img.shields.io/badge/Author-José%20Antonio%20Perdiguero%20López-blue.svg)
 ![Generic badge](https://img.shields.io/badge/Status-Development-yellow.svg)
 
-* **Status:** Development
+* **Project:** Goobox
 * **Author:** José Antonio Perdiguero López
+* **Status:** Development
 
 ## Introduction
 
