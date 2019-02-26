@@ -1,38 +1,97 @@
-# goobox-nodes-api
+# Goobox Nodes
+
 ![Generic badge](https://img.shields.io/badge/Status-Development-yellow.svg)
 
-API for interacting with nodes.
+* **Status:** Development
+* **Author:** José Antonio Perdiguero López
 
-## Getting started
-To run _Goobox Nodes API_ you need previously to install the requirements and you can either use public docker image or build it from sources.
+## Introduction
+
+_Goobox Nodes_ is a service part of Goobox ecosystem that manages the collection of data and metadata of storage nodes,
+keep it updated and provides a reliable way to access it.
+
+## API Description
+
+### Online Documentation
+API documentation can be accessed through `/docs/` or `/redoc/` endpoint, and it will show the full documentation that 
+reflects the current status of the service, gathering every **resource** and its different **methods** as well as how 
+to call the endpoint of these methods, including a descriptive list of **parameters**.
+
+### Schema
+The schema of the API can be generated following OpenAPI standard calling the `/schema/` endpoint:
+
+```commandline
+curl http://localhost:8000/schema/
+```
+
+## Contribute
 
 ### Requirements
-1. *Docker:* Install it following [official docs](https://docs.docker.com/engine/installation/).
 
-### Use public image
-You can use public docker image to run the service.
+ * [Python](https://www.python.org/downloads/).
+ * [Docker](https://docs.docker.com/install/).
+ * [Poetry](https://poetry.eustace.io/docs/#installation).
 
-    docker run -p 80:80 goobox/goobox-nodes-api:latest start
+### Build
 
-### Build from sources
-To build _Goobox Nodes API_ from sources you need to clone this project and build the image.
+Clone repository 
 
-    git clone https://github.com/goobox/goobox-nodes-api.git & cd goobox-nodes-api
-    python3.6 make build
+```commandline
+git clone https://github.com/goobox/goobox-nodes-api.git
+```
 
-Once build is completed you can run the scraper using ``start`` command from the entry point.
+Install development dependencies
 
-    python3.6 make run start
+```commandline
+poetry install
+```
+
+Build service image
+
+```commandline
+poetry run python make build
+```
+
+### Run
+
+Run the service stack
+
+```commandline
+poetry run python make up
+```
+
+And stop it when you finish
+
+```commandline
+poetry run python make down
+```
 
 ### Help
 The entry point has a self-describing help that can be queried.
 
-    python3.6 make run -h
+```commandline
+poetry run python make run -h
+```
 
 Also, each command has its own help.
 
-    python3.6 make run start -h
- 
+```commandline
+poetry run python make run start -h
+```
+ ### Code Quality
+To check code quality:
+
+```commandline
+poetry run python make run lint
+```
+
+### Testing
+To run tests manually:
+
+```commandline
+poetry run python make run test
+```
+
 ## License
 
 [GNU GPL v3](https://github.com/GooBox/goobox-nodes-api/blob/master/LICENSE)
