@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "goobox-nodes-api"
+version = "0.1.0"
+description = "Service that manages the gathering of Goobox nodes and provides smart filtering and searching over them."
+authors = ["José Antonio Perdiguero López <perdy@perdy.io>"]
+
+[tool.poetry.dependencies]
+python = "^3.7.0"
+clinner = "^1.12.1"
+aiohttp = "^3.4"
+starlette = {version = "^0.11",extras = ["full"]}
+starlette-api = {version = "^0.5",extras = ["full"]}
+uvicorn = "^0.4"
+marshmallow = {version = "^2.16",allows-prereleases = true}
+databases = {version = "^0.1.7",extras = ["postgresql"]}
+alembic = "^1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+flake8 = "^3.5"
+black = "^18.3-alpha.0"
+isort = "^4.3"
+pytest-xdist = "^1.22"
+pytest-cov = "^2.5"
+coverage = "^4.5"
+ipython = "^6.4"
+ipdb = "^0.11.0"
+pytest-asyncio = "^0.9.0"
+pytest-freezegun = "^0.2.0"
+asynctest = "^0.12.2"
+aioresponses = "^0.5"
+
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.tox
+  | \.data
+  | build
+  | dist
+)/
+'''

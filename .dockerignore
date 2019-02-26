@@ -1,0 +1,31 @@
+# Tests
+.pytest_cache/
+.test_report/
+.coverage
+tests/
+
+# Project data and cache
+*__pycache__/
+.data/
+logs/
+
+# Deployment
+deployment/
+
+# Docker config
+Dockerfile
+docker-compose.yml
+
+# Project config and metadata
+.git/
+.gitignore
+.pre-commit-config.yaml
+bitbucket-pipelines.yml
+make
+README.md
+LICENSE
+
+# PID files
+supervisord.pid
+uvicorn.pid
+uvicorn.sock

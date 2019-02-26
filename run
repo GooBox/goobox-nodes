@@ -1,0 +1,67 @@
+#!/usr/bin/env python3.6
+"""Run script.
+"""
+import os
+import shlex
+import sys
+from typing import List
+
+from clinner.command import Type as CommandType, command
+from clinner.run import Main as ClinnerMain
+
+PYTHON = 'python3.6'
+UVICORN = 'uvicorn'
+APP = 'goobox_nodes_api'
+
+
+@command(command_type=CommandType.SHELL,
+         parser_opts={'help': 'Start server'})
+def start(*args, **kwargs) -> List[List[str]]:
+    cmd = shlex.split(f'{UVICORN} '
+                      f'{APP}.app:app '
+                      f'--workers=4 '
+                      f'--bind={os.environ["APP_HOST"]}:{os.environ["APP_PORT"]} '
+                      f'--pid=uvicorn.pid')
+    cmd += list(args)
+    return [cmd]
+
+
+@command(command_type=CommandType.PYTHON,
+         parser_opts={'help': 'Start development server'})
+def development(*args, **kwargs):
+    from goobox_nodes_api.app import app
+    app.serve('0.0.0.0', 8000, debug=True)
+
+
+@command(command_type=CommandType.PYTHON,
+         parser_opts={'help': 'Create tables'})
+def create_tables(*args, **kwargs):
+    from apistar_sqlalchemy import database
+    database.Base.metadata.create_all(database.get_engine())
+
+
+@command(command_type=CommandType.PYTHON,
+         parser_opts={'help': 'Drop tables'})
+def drop_tables(*args, **kwargs):
+    from apistar_sqlalchemy import database
+    database.Base.metadata.drop_all(database.get_engine())
+
+
+class Main(ClinnerMain):
+    commands = (
+        'clinner.run.commands.pytest.pytest',
+        'clinner.run.commands.prospector.prospector',
+        'start',
+        'development',
+    )
+
+    def inject_app_settings(self):
+        """
+        Injecting own settings.
+        """
+        os.environ.setdefault('APP_HOST', '0.0.0.0')
+        os.environ.setdefault('APP_PORT', '8000')
+
+
+if __name__ == '__main__':
+    sys.exit(Main().run())
