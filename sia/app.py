@@ -1,10 +1,10 @@
 from starlette_api.routing import Router
 
-from sia import views
+from sia import resources
 
 __app__ = ["app"]
 
 
 app = Router()
 
-app.add_route("/fetch/", views.fetch, name="fetch")
+resources.SiaNodeResource().add_routes(app)

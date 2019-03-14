@@ -33,20 +33,6 @@ def development(*args, **kwargs):
     app.serve('0.0.0.0', 8000, debug=True)
 
 
-@command(command_type=CommandType.PYTHON,
-         parser_opts={'help': 'Create tables'})
-def create_tables(*args, **kwargs):
-    from apistar_sqlalchemy import database
-    database.Base.metadata.create_all(database.get_engine())
-
-
-@command(command_type=CommandType.PYTHON,
-         parser_opts={'help': 'Drop tables'})
-def drop_tables(*args, **kwargs):
-    from apistar_sqlalchemy import database
-    database.Base.metadata.drop_all(database.get_engine())
-
-
 class Main(ClinnerMain):
     commands = (
         'clinner.run.commands.pytest.pytest',

@@ -9,11 +9,12 @@ python = "^3.7.0"
 clinner = "^1.12.1"
 aiohttp = "^3.4"
 starlette = {version = "^0.11",extras = ["full"]}
-starlette-api = {version = "^0.5",extras = ["full"]}
+starlette-api = {version = "^0.6",extras = ["full"]}
 uvicorn = "^0.4"
 marshmallow = {version = "^2.16",allows-prereleases = true}
 databases = {version = "^0.1.7",extras = ["postgresql"]}
 alembic = "^1.0"
+python-forge = "^18.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
@@ -29,6 +30,7 @@ pytest-asyncio = "^0.9.0"
 pytest-freezegun = "^0.2.0"
 asynctest = "^0.12.2"
 aioresponses = "^0.5"
+sqlalchemy-utils = "^0.33.11"
 
 [tool.black]
 line-length = 120

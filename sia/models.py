@@ -9,7 +9,7 @@ __all__ = ["sia_node"]
 sia_node = sqlalchemy.Table(
     "sia_node",
     database_metadata,
-    sqlalchemy.Column("id", sqlalchemy.String, primary_key=True),
+    sqlalchemy.Column("id", postgresql.UUID, primary_key=True),
     sqlalchemy.Column("accepting_contracts", sqlalchemy.Boolean),
     sqlalchemy.Column("max_download_batch_size", sqlalchemy.Integer),
     sqlalchemy.Column("max_duration", sqlalchemy.Integer),
@@ -38,9 +38,9 @@ sia_node = sqlalchemy.Table(
     sqlalchemy.Column("last_historic_update", sqlalchemy.Integer),
     sqlalchemy.Column("public_key_string", sqlalchemy.String),
     sqlalchemy.Column("ipnets", postgresql.ARRAY(postgresql.INET)),
-    sqlalchemy.Column("address", sqlalchemy.String),
-    sqlalchemy.Column("country", sqlalchemy.String),
-    sqlalchemy.Column("city", sqlalchemy.String),
-    sqlalchemy.Column("latitude", sqlalchemy.Float),
-    sqlalchemy.Column("longitude", sqlalchemy.Float),
+    sqlalchemy.Column("address", sqlalchemy.String, nullable=False),
+    sqlalchemy.Column("country", sqlalchemy.String, nullable=False),
+    sqlalchemy.Column("city", sqlalchemy.String, nullable=False),
+    sqlalchemy.Column("latitude", sqlalchemy.Float, nullable=False),
+    sqlalchemy.Column("longitude", sqlalchemy.Float, nullable=False),
 )

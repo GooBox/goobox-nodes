@@ -6,4 +6,6 @@ from goobox_nodes_api import settings
 
 # Database definition.
 database_metadata = sqlalchemy.MetaData()
-database = databases.Database(settings.DATABASE_URL)
+
+# Use 'force_rollback' during testing, to ensure we do not persist database changes between each test case
+database = databases.Database(settings.DATABASE_URL, force_rollback=settings.TESTING)

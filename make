@@ -35,8 +35,8 @@ def down(*args, **kwargs) -> List[List[str]]:
 
 
 @command(command_type=CommandType.SHELL, parser_opts={"help": "Run command through entrypoint"})
-def run(*args, **kwargs) -> List[List[str]]:
-    return [shlex.split(f"docker-compose run api") + list(args)]
+def run(*args, testing: bool = False, **kwargs) -> List[List[str]]:
+    return [shlex.split(f"docker-compose run {'-e TESTING=true' if testing else ''} api") + list(args)]
 
 
 @command(
@@ -45,7 +45,7 @@ def run(*args, **kwargs) -> List[List[str]]:
     parser_opts={"help": "Run tests"},
 )
 def test(*args, **kwargs) -> List[List[str]]:
-    return run("pytest", *args, **kwargs)
+    return run("pytest", *args, testing=True, **kwargs)
 
 
 @command(command_type=CommandType.SHELL, parser_opts={"help": "Run lint"})
