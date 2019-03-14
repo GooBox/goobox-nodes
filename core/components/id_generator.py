@@ -18,7 +18,7 @@ class IDGenerator:
     def generate(self, namespace: str, key: str) -> uuid.UUID:
         return uuid.uuid5(self._get_namespace(namespace), key)
 
-    def generate_sia_node(self, key: str) -> uuid.UUID:
+    def generate_node_sia(self, key: str) -> uuid.UUID:
         return self.generate("sia_node", key)
 
 

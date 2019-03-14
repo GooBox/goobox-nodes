@@ -26,7 +26,7 @@ services:
       - ./logs/postgresql:/var/log/postgresql
 
   sia:
-    image: goobox/docker-sia:1.4.0-rc2
+    image: goobox/docker-sia:1.4.0-rc3
     command: ["start", "--bootstrap", "--modules", "gctwr"]
     ports:
       - "9000:8000"

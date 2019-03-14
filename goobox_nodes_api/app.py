@@ -1,6 +1,6 @@
 from starlette_api.applications import Starlette
 
-import sia.app
+import nodes.app
 from goobox_nodes_api.components import components
 from goobox_nodes_api.resources import database
 
@@ -39,4 +39,4 @@ async def root():
     }
 
 
-app.mount("/sia", sia.app.app, name="sia")
+app.mount("/nodes", nodes.app.app, name="nodes")

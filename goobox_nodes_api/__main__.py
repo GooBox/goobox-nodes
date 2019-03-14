@@ -37,7 +37,7 @@ def development(*args, **kwargs):
             "handlers": {"default": {"level": "DEBUG", "formatter": "standard", "class": "logging.StreamHandler"}},
             "loggers": {
                 "goobox_nodes_api": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
-                "sia": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
+                "nodes": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
             },
         }
     )

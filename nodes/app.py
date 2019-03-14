@@ -1,6 +1,6 @@
 from starlette_api.routing import Router
 
-from sia import resources
+from nodes import resources
 
 __app__ = ["app"]
 
