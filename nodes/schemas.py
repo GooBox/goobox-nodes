@@ -1,5 +1,5 @@
-from marshmallow import Schema, validate
-from marshmallow.fields import Boolean, UUID, Integer, String, Float, List
+from marshmallow import Schema
+from marshmallow.fields import UUID, Boolean, Float, Integer, List, String
 
 
 class SiaNode(Schema):
@@ -14,20 +14,20 @@ class SiaNode(Schema):
     max_duration = Integer(
         title="max_duration",
         description="Maximum duration in blocks that a host will allow for a file contract. The host commits to "
-                    "keeping files for the full duration under the threat of facing a large penalty for losing or "
-                    "dropping data before the duration is complete. The storage proof window of an incoming file "
-                    "contract must end before the current height + maxduration.",
+        "keeping files for the full duration under the threat of facing a large penalty for losing or "
+        "dropping data before the duration is complete. The storage proof window of an incoming file "
+        "contract must end before the current height + maxduration.",
     )
     max_revise_batch_size = Integer(
         title="max_revise_batch_size",
         description="Maximum size in bytes of a single batch of file contract revisions. Larger batch sizes allow for "
-                    "higher throughput as there is significant communication overhead associated with performing a "
-                    "batch upload.",
+        "higher throughput as there is significant communication overhead associated with performing a "
+        "batch upload.",
     )
     net_address = String(
         title="net_address",
         description="Remote address of the host. It can be an IPv4, IPv6, or hostname, along with the port. IPv6 "
-                    "addresses are enclosed in square brackets.",
+        "addresses are enclosed in square brackets.",
     )
     remaining_storage = Integer(
         title="remaining_storage", description="Unused storage capacity the host claims it has."
@@ -45,13 +45,13 @@ class SiaNode(Schema):
     window_size = Integer(
         title="window_size",
         description="A storage proof window is the number of blocks that the host has to get a storage proof onto the "
-                    "blockchain. The window size is the minimum size of window that the host will accept in a file "
-                    "contract.",
+        "blockchain. The window size is the minimum size of window that the host will accept in a file "
+        "contract.",
     )
     collateral = String(
         title="collateral",
         description="The maximum amount of money that the host will put up as collateral for storage that is contracted"
-                    " by the renter.",
+        " by the renter.",
     )
     max_collateral = String(
         title="max_collateral",
@@ -60,8 +60,8 @@ class SiaNode(Schema):
     contract_price = String(
         title="contract_price",
         description="The price that a renter has to pay to create a contract with the host. The payment is intended "
-                    "to cover transaction fees for the file contract revision and the storage proof that the host will "
-                    "be submitting to the blockchain.",
+        "to cover transaction fees for the file contract revision and the storage proof that the host will "
+        "be submitting to the blockchain.",
     )
     download_bandwidth_price = String(
         title="download_bandwidth_price",
@@ -77,8 +77,8 @@ class SiaNode(Schema):
     revision_number = Integer(
         title="revision_number",
         description="The revision number indicates to the renter what iteration of settings the host is currently at. "
-                    "Settings are generally signed. If the renter has multiple conflicting copies of settings from "
-                    "the host, the renter can expect the one with the higher revision number to be more recent.",
+        "Settings are generally signed. If the renter has multiple conflicting copies of settings from "
+        "the host, the renter can expect the one with the higher revision number to be more recent.",
     )
     version = String(title="version", description="The version of the host.")
     first_seen = Integer(
@@ -104,7 +104,7 @@ class SiaNode(Schema):
     last_historic_update = Integer(
         title="last_historic_update",
         description="The last time that the interactions within scanhistory have been compressed into the historic "
-                    "ones.",
+        "ones.",
     )
     public_key_string = String(
         title="public_key_string",
@@ -113,10 +113,10 @@ class SiaNode(Schema):
     ipnets = List(
         String(),
         title="ipnets",
-        description='List of IP subnet masks used by the host. For IPv4 the /24 and for IPv6 the /54 subnet mask is '
-                    'used. A host can have either one IPv4 or one IPv6 subnet or one of each. E.g. these lists are '
-                    'valid: [ "IPv4" ], [ "IPv6" ] or [ "IPv4", "IPv6" ]. The following lists are invalid: [ "IPv4", '
-                    '"IPv4" ], [ "IPv4", "IPv6", "IPv6" ]. Hosts with an invalid list are ignored.',
+        description="List of IP subnet masks used by the host. For IPv4 the /24 and for IPv6 the /54 subnet mask is "
+        "used. A host can have either one IPv4 or one IPv6 subnet or one of each. E.g. these lists are "
+        'valid: [ "IPv4" ], [ "IPv6" ] or [ "IPv4", "IPv6" ]. The following lists are invalid: [ "IPv4", '
+        '"IPv4" ], [ "IPv4", "IPv6", "IPv6" ]. Hosts with an invalid list are ignored.',
     )
     address = String(title="address", description="The full address of the node.")
     country = String(title="country", description="The country where the node can be found.")

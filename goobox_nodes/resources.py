@@ -1,8 +1,7 @@
 import databases
 import sqlalchemy
 
-from goobox_nodes_api import settings
-
+from goobox_nodes import settings
 
 # Database definition.
 database_metadata = sqlalchemy.MetaData()

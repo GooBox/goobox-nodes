@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "goobox-nodes-api"
+name = "goobox-nodes"
 version = "0.1.0"
 description = "Service that manages the gathering of Goobox nodes and provides smart filtering and searching over them."
 authors = ["José Antonio Perdiguero López <perdy@perdy.io>"]

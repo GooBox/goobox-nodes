@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from goobox_nodes_api import settings
+from goobox_nodes import settings
 
 
 class TestCaseSiaNodeResource:

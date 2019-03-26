@@ -37,6 +37,7 @@ coverage.xml
 *,cover
 .test_report/
 .pytest_cache/
+test-results/
 
 # Data
 .data/

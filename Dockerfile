@@ -2,7 +2,7 @@ FROM python:3.7-slim
 LABEL maintainer="Goobox <perdy@perdy.io>"
 
 ENV LC_ALL='C.UTF-8' PYTHONIOENCODING='utf-8'
-ENV APP=goobox-nodes-api
+ENV APP=goobox-nodes
 ENV BASEDIR=/srv/apps/$APP
 ENV APPDIR=$BASEDIR/app
 ENV LOGDIR=$BASEDIR/logs
@@ -38,4 +38,4 @@ RUN apt-get update && \
 # Copy application
 COPY . $APPDIR
 
-ENTRYPOINT ["poetry", "run", "python", "-m", "goobox_nodes_api"]
+ENTRYPOINT ["poetry", "run", "python", "-m", "goobox_nodes"]

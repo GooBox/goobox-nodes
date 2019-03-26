@@ -7,11 +7,8 @@ from alembic.config import Config
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from starlette.testclient import TestClient
 
-# This sets `os.environ`, but provides some additional protection.
-# If we placed it below the application import, it would raise an error
-# informing us that 'TESTING' had already been read from the environment.
-from goobox_nodes_api import settings
-from goobox_nodes_api.app import app as app_
+from goobox_nodes import settings
+from goobox_nodes.app import app as app_
 
 
 @pytest.yield_fixture(scope="session")

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Run script.
 """
-import asyncio
 import logging.config
 import os
 import shlex
@@ -15,7 +14,7 @@ from clinner.run import Main as ClinnerMain
 from uvicorn.config import get_logger
 from uvicorn.reloaders.statreload import StatReload
 
-APP = "goobox-nodes-api"
+APP = "goobox-nodes"
 
 sys.path.insert(0, os.getcwd())
 
@@ -36,7 +35,7 @@ def development(*args, **kwargs):
             "formatters": {"standard": {"format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"}},
             "handlers": {"default": {"level": "DEBUG", "formatter": "standard", "class": "logging.StreamHandler"}},
             "loggers": {
-                "goobox_nodes_api": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
+                "goobox_nodes": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
                 "nodes": {"handlers": ["default"], "level": "DEBUG", "propagate": False},
             },
         }
@@ -45,7 +44,7 @@ def development(*args, **kwargs):
     StatReload(get_logger("debug")).run(
         uvicorn.run,
         {
-            "app": "goobox_nodes_api.app:app",
+            "app": "goobox_nodes.app:app",
             "host": os.environ["APP_HOST"],
             "port": int(os.environ["APP_PORT"]),
             "debug": True,

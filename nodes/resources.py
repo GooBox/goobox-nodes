@@ -1,7 +1,7 @@
 from starlette_api.resources import CRUDListDropResource, resource_method
 
 from core.components.id_generator import IDGenerator
-from goobox_nodes_api.resources import database
+from goobox_nodes.resources import database
 from nodes import models, schemas
 
 __all__ = ["SiaNodeResource"]

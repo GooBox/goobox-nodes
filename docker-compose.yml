@@ -1,13 +1,13 @@
 version: '3'
 services:
   api:
-    image: goobox/goobox-nodes-api:latest
+    image: goobox/goobox-nodes:latest
     command: ["development"]
     ports:
       - "8000:8000"
     volumes:
-      - .:/srv/apps/goobox-nodes-api/app
-      - ./logs/goobox-nodes-api:/srv/apps/goobox-nodes-api/logs
+      - .:/srv/apps/goobox-nodes/app
+      - ./logs/goobox-nodes:/srv/apps/goobox-nodes/logs
     links:
       - postgresql
       - sia

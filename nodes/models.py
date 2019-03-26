@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy.dialects import postgresql
 
-from goobox_nodes_api.resources import database_metadata
+from goobox_nodes.resources import database_metadata
 
 __all__ = ["sia_node"]
 

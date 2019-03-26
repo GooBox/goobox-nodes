@@ -1,8 +1,8 @@
 from starlette_api.applications import Starlette
 
 import nodes.app
-from goobox_nodes_api.components import components
-from goobox_nodes_api.resources import database
+from goobox_nodes.components import components
+from goobox_nodes.resources import database
 
 app = Starlette(
     components=components,
@@ -26,7 +26,7 @@ async def shutdown():
 
 
 # Root view
-@app.route("/")
+@app.route("/", include_in_schema=False)
 async def root():
     """
     description: Welcome view.
@@ -36,7 +36,7 @@ async def root():
     """
     return {
         "message": "Welcome to Goobox Nodes, check /schema/ for API Schema, /docs/ for API docs or /redoc/ for ReDoc."
-    }
+    }  # noqa
 
 
 app.mount("/nodes", nodes.app.app, name="nodes")

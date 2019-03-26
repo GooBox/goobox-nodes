@@ -1,8 +1,9 @@
-import typing
+import typing  # noqa
 import uuid
 
-from goobox_nodes_api import settings
 from starlette_api.components import Component
+
+from goobox_nodes import settings
 
 
 class IDGenerator:

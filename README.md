@@ -40,7 +40,7 @@ curl http://localhost:8000/schema/
 Clone repository 
 
 ```commandline
-git clone https://github.com/goobox/goobox-nodes-api.git
+git clone https://github.com/goobox/goobox-nodes.git
 ```
 
 Install development dependencies
@@ -97,4 +97,4 @@ poetry run python make run test
 
 ## License
 
-[GNU GPL v3](https://github.com/GooBox/goobox-nodes-api/blob/master/LICENSE)
+[GNU GPL v3](https://github.com/GooBox/goobox-nodes/blob/master/LICENSE)

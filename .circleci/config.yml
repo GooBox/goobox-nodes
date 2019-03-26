@@ -1,0 +1,87 @@
+version: 2.1
+
+executors:
+  builder:
+    docker:
+      - image: perdy/circleci-python-builder:latest
+    environment:
+      IMAGE_NAME: goobox/goobox-nodes
+
+workflows:
+  version: 2.1
+  test_and_release:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          context:
+            aws_ecr
+          filters:
+            branches:  # ignore any commit on any branch by default
+              only: master
+          requires:
+            - test
+
+jobs:
+  build:
+    executor: builder
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "Dockerfile" }}-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/caches/docker.tar
+      - run:
+          name: Build Docker image
+          command: builder --tag $AWS_ECR_URL/$IMAGE_NAME build --cache ~/caches/docker.tar
+      - save_cache:
+          key: v1-{{ checksum "Dockerfile" }}-{{ checksum "poetry.lock" }}
+          paths:
+            - ~/caches/docker.tar
+      - persist_to_workspace:
+          root: ~/caches
+          paths:
+            - docker.tar
+  test:
+    executor: builder
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Load Docker image
+          command: docker load -i /tmp/workspace/docker.tar
+      - run:
+          name: Code format (black)
+          command: python make black --check .
+      - run:
+          name: Imports sort (isort)
+          command: python make isort --check-only
+      - run:
+          name: Code lint (flake8)
+          command: python make flake8
+      - run:
+          name: Tests
+          command: python make test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+  deploy:
+    executor: builder
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Load Docker image
+          command: docker load -i /tmp/workspace/docker.tar
+      - run:
+          name: Push Docker image
+          command: builder --tag $AWS_ECR_URL/$IMAGE_NAME push --aws-ecr $AWS_ECR_URL
