@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/srv/apps/goobox-nodes/app
+      - .:/srv/apps/goobox-nodes
       - ./logs/goobox-nodes:/srv/apps/goobox-nodes/logs
     links:
       - postgresql
@@ -26,9 +26,9 @@ services:
       - ./logs/postgresql:/var/log/postgresql
 
   sia:
-    image: goobox/docker-sia:1.4.0-rc3
+    image: goobox/docker-sia:1.4.0-rc4
     command: ["start", "--bootstrap", "--modules", "gctwr"]
-    ports:
-      - "9000:8000"
+    expose:
+      - "8000"
     volumes:
-      - .data/sia:/srv/apps/sia/data
+      - ./.data/sia:/srv/apps/sia/data

@@ -16,7 +16,7 @@ from uvicorn.reloaders.statreload import StatReload
 
 APP = "goobox-nodes"
 
-sys.path.insert(0, os.getcwd())
+sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 
 @command(command_type=CommandType.SHELL, parser_opts={"help": "Start server"})

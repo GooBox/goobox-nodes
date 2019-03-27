@@ -42,6 +42,9 @@ test-results/
 # Data
 .data/
 
+## Environment
+.env
+
 # Translations
 *.mo
 *.pot

@@ -1,6 +1,6 @@
 from starlette_api.applications import Starlette
 
-import nodes.app
+import goobox_nodes.nodes.app
 from goobox_nodes.components import components
 from goobox_nodes.resources import database
 
@@ -39,4 +39,4 @@ async def root():
     }  # noqa
 
 
-app.mount("/nodes", nodes.app.app, name="nodes")
+app.mount("/nodes", goobox_nodes.nodes.app.app, name="nodes")

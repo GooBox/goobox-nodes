@@ -2,8 +2,10 @@
 """Run script.
 """
 import logging
+import os
 import shlex
 import shutil
+import subprocess
 import sys
 from typing import List
 
@@ -14,24 +16,61 @@ try:
     from clinner.run import Main
 except Exception:
     logger.error("Package clinner is not installed, run 'pip install clinner' to install it")
-    sys.exit(-1)
+    sys.exit(1)
+
+try:
+    import jinja2
+
+    templates = jinja2.Environment(loader=jinja2.FileSystemLoader("."), trim_blocks=True, lstrip_blocks=True)
+except Exception:
+    logger.error("Package jinja2 is not installed, run 'pip install jinja2' to install it")
+    sys.exit(1)
 
 
-APP_NAME = "goobox-nodes"
-IMAGE_NAME = f"goobox/{APP_NAME}"
-APP_PATH = f"/srv/apps/{APP_NAME}/app"
+APP = "goobox-nodes"
+IMAGE = f"goobox/{APP}"
+APP_PATH = f"/srv/apps/{APP}/app"
 
 
-@command(command_type=Type.SHELL, parser_opts={"help": "Build docker image"})
-def build(*args, **kwargs) -> List[List[str]]:
-    tag = ["-t", f"{kwargs['image']}:{kwargs['tag']}"]
-    return [shlex.split(f"docker build") + tag + ["."] + list(args)]
+@command(
+    command_type=Type.PYTHON,
+    args=(
+        (("-t", "--tag"), {"help": "Docker image tag", "default": f"{IMAGE}:latest"}),
+        (("-p", "--production"), {"help": "Build production image", "action": "store_true"}),
+    ),
+    parser_opts={"help": "Build docker image"},
+)
+def build(*args, **kwargs):
+    context = {
+        "from_image": "python:3.7-slim",
+        "labels": ['maintainer="GooBox <perdy@perdy.io>"'],
+        "project": APP,
+        "app": APP.replace("-", "_"),
+        "runtime_packages": ["supervisor", "nginx"],
+        "build_packages": ["build-essential"],
+        "production": kwargs["production"],
+    }
+
+    dockerfile = templates.get_template("Dockerfile.j2").render(**context)
+    logger.debug("---- Dockerfile ----\n%s\n--------------------", dockerfile)
+    subprocess.run(shlex.split(f"docker build -t {kwargs['tag']} -f- .") + list(args), input=dockerfile.encode("utf-8"))
 
 
 @command(command_type=Type.PYTHON, parser_opts={"help": "Clean directory"})
 def clean(*args, **kwargs):
-    for path in (".pytest_cache", ".coverage", "test-results"):
-        shutil.rmtree(path, ignore_errors=True)
+    if os.getuid() != 0:
+        logger.error("It is necessary to call clean with sudo")
+        return None
+
+    for path in (".pytest_cache", ".coverage", "test-results", "uvicorn.pid"):
+        try:
+            if os.path.isfile(path):
+                os.remove(path)
+            else:
+                shutil.rmtree(path)
+            logger.info("Removed successfully: %s", path)
+        except Exception:
+            logger.error("Cannot remove: %s", path)
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Start docker compose stack"})
@@ -46,42 +85,45 @@ def down(*args, **kwargs) -> List[List[str]]:
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Run command through entrypoint"})
 def run(*args, testing: bool = False, **kwargs) -> List[List[str]]:
-    return [shlex.split(f"docker-compose run {'-e TESTING=true' if testing else ''} api") + list(args)]
+    environment = "-e TESTING=true" if testing else ""
+
+    if kwargs["alone"]:
+        return [shlex.split(f"docker run {environment} {IMAGE}") + list(args)]
+    else:
+        return [shlex.split(f"docker-compose run {environment} api") + list(args)]
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Black code formatting"})
 def black(*args, **kwargs):
-    return run("black", *args)
+    kwargs["alone"] = True
+    return run("black", *args, **kwargs)
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Flake8 code analysis"})
 def flake8(*args, **kwargs):
-    return run("flake8", *args)
+    kwargs["alone"] = True
+    return run("flake8", *args, **kwargs)
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Isort imports formatting"})
 def isort(*args, **kwargs):
-    return run("isort", *args)
+    kwargs["alone"] = True
+    return run("isort", *args, **kwargs)
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Run lint"})
 def lint(*args, **kwargs) -> List[List[str]]:
-    return black("--check", ".") + flake8() + isort("--check-only")
+    return black("--check", ".", **kwargs) + flake8(**kwargs) + isort("--check-only", **kwargs)
 
 
-@command(
-    command_type=Type.SHELL,
-    args=((("--alone",), {"help": "Run docker container instead of compose", "action": "store_true"}),),
-    parser_opts={"help": "Run tests"},
-)
+@command(command_type=Type.SHELL, parser_opts={"help": "Run tests"})
 def test(*args, **kwargs) -> List[List[str]]:
     return run("pytest", *args, testing=True, **kwargs)
 
 
 class Make(Main):
     def add_arguments(self, parser):
-        parser.add_argument("-i", "--image", help="Docker image name", default=IMAGE_NAME)
-        parser.add_argument("-t", "--tag", help="Docker tag", default="latest")
+        parser.add_argument("--alone", help="Run app container alone", action="store_true")
 
 
 if __name__ == "__main__":

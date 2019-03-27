@@ -1,11 +1,10 @@
 # Tests
 .pytest_cache/
-.test_report/
+test-results/
 .coverage
-tests/
 
 # Project data and cache
-*__pycache__/
+**/__pycache__
 .data/
 logs/
 
@@ -13,14 +12,15 @@ logs/
 deployment/
 
 # Docker config
-Dockerfile
+Dockerfile.j2
 docker-compose.yml
+.dockerignore
 
 # Project config and metadata
+.circleci/
 .git/
 .gitignore
 .pre-commit-config.yaml
-bitbucket-pipelines.yml
 make
 README.md
 LICENSE

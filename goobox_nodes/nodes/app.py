@@ -1,6 +1,6 @@
 from starlette_api.routing import Router
 
-from nodes import resources
+from goobox_nodes.nodes import resources
 
 __app__ = ["app"]
 

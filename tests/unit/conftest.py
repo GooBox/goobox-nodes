@@ -24,17 +24,17 @@ def event_loop(request):
 
 @pytest.fixture(scope="session")
 def app():
-
     url = str(settings.DATABASE_URL)
     assert not database_exists(url), "Test database already exists. Aborting tests."
 
-    create_database(url)  # Create the test database.
-    config = Config("alembic.ini")  # Run the migrations.
-    command.upgrade(config, "head")
+    try:
+        create_database(url)  # Create the test database.
+        config = Config("alembic.ini")  # Run the migrations.
+        command.upgrade(config, "head")
 
-    yield app_
-
-    drop_database(url)  # Drop the test database.
+        yield app_
+    finally:
+        drop_database(url)  # Drop the test database.
 
 
 @pytest.fixture
