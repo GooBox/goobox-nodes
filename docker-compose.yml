@@ -5,6 +5,9 @@ services:
     command: ["development"]
     ports:
       - "8000:8000"
+    environment:
+      - SECRET_KEY=4088e2a3-bf9c-4246-a19b-66617be962e3
+      - DATABASE_URL=postgresql://localuser:localpasswd@postgresql:5432/localdb
     volumes:
       - .:/srv/apps/goobox-nodes
       - ./logs/goobox-nodes:/srv/apps/goobox-nodes/logs

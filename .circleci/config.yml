@@ -6,26 +6,16 @@ executors:
       - image: perdy/circleci-python-builder:latest
     environment:
       IMAGE_NAME: goobox/goobox-nodes
-  tester:
-    docker:
-      - image: perdy/circleci-python-builder:latest
-      - image: circleci/postgres:9.6.2-alpine
-    environment:
-      IMAGE_NAME: goobox/goobox-nodes
-      SECRET_KEY: 4088e2a3-bf9c-4246-a19b-66617be962e3
-      ENVIRONMENT: local
-      DATABASE_URL: postgresql://localuser:localpasswd@localhost:5432/localdb
-      POSTGRES_USER: localuser
-      POSTGRES_PASSWORD: localpasswd
-      POSTGRES_DB: localdb
+
 workflows:
   version: 2.1
-  test_and_release:
+  build-test-deploy:
     jobs:
-      - build
+      - build-development
+      - build-production
       - test:
           requires:
-            - build
+            - build-development
       - deploy:
           context:
             aws_ecr
@@ -33,43 +23,74 @@ workflows:
             branches:  # ignore any commit on any branch by default
               only: master
           requires:
+            - build-production
             - test
 
 jobs:
-  build:
+  build-production:
     executor: builder
     steps:
       - checkout
       - setup_remote_docker
       - restore_cache:
           keys:
-            - v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}
+            - v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}-production
           paths:
-            - ~/caches/docker.tar
+            - ~/cache/docker.tar
+      - run:
+          name: Load cached Docker image
+          command: builder load ~/cache/docker.tar
       - run:
           name: Build Docker image
-          command: python make build --production --cache-from ~/caches/docker.tar
+          command: python make build --production
       - run:
           name: Save Docker image
-          command: builder save $IMAGE_NAME ~/caches/docker.tar
+          command: builder save $IMAGE_NAME ~/cache/docker.tar
       - save_cache:
-          key: v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}
+          key: v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}-production
           paths:
-            - ~/caches/docker.tar
+            - ~/cache/docker.tar
       - persist_to_workspace:
-          root: ~/caches
+          root: ~/cache/
           paths:
             - docker.tar
+  build-development:
+    executor: builder
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}-development
+          paths:
+            - ~/cache/docker-development.tar
+      - run:
+          name: Load cached Docker image
+          command: builder load ~/cache/docker-development.tar
+      - run:
+          name: Build Docker image
+          command: python make build
+      - run:
+          name: Save Docker image
+          command: builder save $IMAGE_NAME ~/cache/docker-development.tar
+      - save_cache:
+          key: v1-{{ checksum "Dockerfile.j2" }}-{{ checksum "poetry.lock" }}-development
+          paths:
+            - ~/cache/docker-development.tar
+      - persist_to_workspace:
+          root: ~/cache/
+          paths:
+            - docker-development.tar
   test:
-    executor: tester
+    executor: builder
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - checkout
       - setup_remote_docker
       - run:
-          name: Build development image
-          command: python make build --cache-from /tmp/workspace/docker.tar
+          name: Load development image
+          command: builder load /tmp/workspace/docker-development.tar
       - run:
           name: Code format (black)
           command: python make black --check .
@@ -81,7 +102,7 @@ jobs:
           command: python make flake8
       - run:
           name: Tests
-          command: python make --alone test
+          command: python make test
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -101,4 +122,4 @@ jobs:
           command: builder tag $IMAGE_NAME $AWS_ECR_URL/$IMAGE_NAME:production $AWS_ECR_URL/$IMAGE_NAME:$CIRCLE_SHA1
       - run:
           name: Push Docker image
-          command: builder push --aws-ecr $AWS_ECR_URL -t $AWS_ECR_URL/$IMAGE_NAME:production -t $AWS_ECR_URL/$IMAGE_NAME:$CIRCLE_SHA1
+          command: builder push --aws-ecr -t $AWS_ECR_URL/$IMAGE_NAME:production -t $AWS_ECR_URL/$IMAGE_NAME:$CIRCLE_SHA1

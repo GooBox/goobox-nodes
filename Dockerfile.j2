@@ -42,7 +42,6 @@ COPY alembic.ini setup.cfg $PROJECT_DIR/
 COPY {{ app }} $APP_DIR/
 {% if not production -%}
   COPY tests/ $PROJECT_DIR/tests/
-  COPY .env $PROJECT_DIR/
 {% endif -%}
 
 ENTRYPOINT ["poetry", "run", "python", "-m", "{{ app }}"]

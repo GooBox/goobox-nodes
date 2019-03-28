@@ -7,6 +7,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from time import sleep
 from typing import List
 
 logger = logging.getLogger("cli")
@@ -83,14 +84,21 @@ def down(*args, **kwargs) -> List[List[str]]:
     return [shlex.split(f"docker-compose down") + list(args)]
 
 
-@command(command_type=Type.SHELL, parser_opts={"help": "Run command through entrypoint"})
-def run(*args, testing: bool = False, **kwargs) -> List[List[str]]:
-    environment = "-e TESTING=true" if testing else ""
+@command(
+    command_type=Type.SHELL,
+    args=((("--compose",), {"help": "Docker compose file", "default": "docker-compose.yml"}),),
+    parser_opts={"help": "Run command through entrypoint"},
+)
+def run(*args, **kwargs) -> List[List[str]]:
+    environment = " ".join([f"-e {i}" for i in kwargs["environment"]])
 
     if kwargs["alone"]:
         return [shlex.split(f"docker run {environment} {IMAGE}") + list(args)]
     else:
-        return [shlex.split(f"docker-compose run {environment} api") + list(args)]
+        return [
+            shlex.split(f"docker-compose -f {kwargs['compose']} pull --ignore-pull-failures"),
+            shlex.split(f"docker-compose -f {kwargs['compose']} run {environment} api") + list(args),
+        ]
 
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Black code formatting"})
@@ -118,12 +126,18 @@ def lint(*args, **kwargs) -> List[List[str]]:
 
 @command(command_type=Type.SHELL, parser_opts={"help": "Run tests"})
 def test(*args, **kwargs) -> List[List[str]]:
-    return run("pytest", *args, testing=True, **kwargs)
+    if not kwargs["alone"]:
+        sleep(5)
+        kwargs["compose"] = "docker-compose-testing.yml"
+
+    kwargs["environment"].append("TESTING=true")
+    return run("pytest", *args, **kwargs)
 
 
 class Make(Main):
     def add_arguments(self, parser):
         parser.add_argument("--alone", help="Run app container alone", action="store_true")
+        parser.add_argument("-e", "--environment", help="Environment variable", action="append", default=[])
 
 
 if __name__ == "__main__":
