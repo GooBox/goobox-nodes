@@ -8,6 +8,7 @@ services:
     environment:
       - SECRET_KEY=4088e2a3-bf9c-4246-a19b-66617be962e3
       - DATABASE_URL=postgresql://localuser:localpasswd@postgresql:5432/localdb
+      - SIA_API_URL=https://sia:8000
     links:
       - postgresql
 
