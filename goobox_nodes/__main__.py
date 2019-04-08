@@ -4,6 +4,7 @@
 import logging.config
 import os
 import shlex
+import subprocess
 import sys
 from typing import List
 
@@ -40,6 +41,8 @@ def development(*args, **kwargs):
             },
         }
     )
+
+    subprocess.run(shlex.split("alembic upgrade head"))
 
     StatReload(get_logger("debug")).run(
         uvicorn.run,

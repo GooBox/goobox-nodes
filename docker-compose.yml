@@ -29,7 +29,7 @@ services:
       - ./logs/postgresql:/var/log/postgresql
 
   sia:
-    image: goobox/docker-sia:1.4.0-rc4
+    image: goobox/docker-sia:1.4.0
     command: ["start", "--bootstrap", "--modules", "gctwr"]
     expose:
       - "8000"
