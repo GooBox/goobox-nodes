@@ -18,7 +18,7 @@ workflows:
             - build-development
       - deploy:
           context:
-            aws_ecr
+            aws
           filters:
             branches:  # ignore any commit on any branch by default
               only: master
@@ -102,7 +102,7 @@ jobs:
           command: python make flake8
       - run:
           name: Tests
-          command: python make test
+          command: python make --ci test
       - store_test_results:
           path: test-results
       - store_artifacts:

@@ -12,6 +12,8 @@ from goobox_nodes.core import exceptions
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["SiaAPIClient", "SiaAPIClientComponent"]
+
 
 class SiaNode(marshmallow.Schema):
     accepting_contracts = Boolean(data_key="acceptingcontracts")
@@ -60,10 +62,10 @@ class SiaAPIClient:
     async def _request(
         self, url: str, headers: typing.Optional[typing.Dict[str, str]] = None, *args, **kwargs
     ) -> typing.Dict:
-        if headers is None:
+        if headers is None:  # noqa
             headers = {}
 
-        if "User-Agent" not in headers:
+        if "User-Agent" not in headers:  # noqa
             headers["User-Agent"] = "Sia-Agent"
 
         try:

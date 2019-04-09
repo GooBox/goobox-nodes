@@ -128,14 +128,16 @@ def lint(*args, **kwargs) -> List[List[str]]:
 def test(*args, **kwargs) -> List[List[str]]:
     if not kwargs["alone"]:
         sleep(5)
-        kwargs["compose"] = "docker-compose-testing.yml"
 
+    kwargs["compose"] = "docker-compose-ci.yml" if kwargs["ci"] else "docker-compose.yml"
     kwargs["environment"].append("TESTING=true")
+
     return run("pytest", *args, **kwargs)
 
 
 class Make(Main):
     def add_arguments(self, parser):
+        parser.add_argument("--ci", help="Run CI environment", action="store_true")
         parser.add_argument("--alone", help="Run app container alone", action="store_true")
         parser.add_argument("-e", "--environment", help="Environment variable", action="append", default=[])
 

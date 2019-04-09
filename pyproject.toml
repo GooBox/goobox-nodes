@@ -15,6 +15,7 @@ marshmallow = {version = "^2.16",allows-prereleases = true}
 databases = {version = "^0.1.7",extras = ["postgresql"]}
 alembic = "^1.0"
 python-forge = "^18.6"
+geoip2 = "^2.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
