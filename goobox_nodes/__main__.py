@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 @command(command_type=CommandType.SHELL, parser_opts={"help": "Start server"})
 def start(*args, **kwargs) -> List[List[str]]:
-    cmd = shlex.split("supervisord -c server/supervisor.ini")
+    cmd = shlex.split("gunicorn goobox_nodes.app:app -b :8000 -w 4 -k uvicorn.workers.UvicornWorker")
     cmd += list(args)
     return [cmd]
 
