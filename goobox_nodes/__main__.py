@@ -15,16 +15,24 @@ from clinner.run import Main as ClinnerMain
 from uvicorn.config import get_logger
 from uvicorn.reloaders.statreload import StatReload
 
-APP = "goobox-nodes"
+APP = "goobox_nodes"
 
 sys.path.insert(0, os.path.dirname(os.getcwd()))
 
 
-@command(command_type=CommandType.SHELL, parser_opts={"help": "Start server"})
-def start(*args, **kwargs) -> List[List[str]]:
-    cmd = shlex.split("gunicorn goobox_nodes.app:app -b :8000 -w 4 -k uvicorn.workers.UvicornWorker")
-    cmd += list(args)
-    return [cmd]
+@command(command_type=CommandType.PYTHON, parser_opts={"help": "Start server"})
+def start(*args, **kwargs):
+    gunicorn_cmd = shlex.split(
+        f"gunicorn {os.environ['STARLETTE_APP']} -b unix:/tmp/gunicorn.sock -w 4 -k uvicorn.workers.UvicornWorker"
+    ) + list(args)
+    nginx_cmd = shlex.split(f"nginx -c {os.path.join(os.getcwd(), 'nginx.conf')}")
+
+    nginx_process = subprocess.Popen(nginx_cmd)
+    gunicorn_process = subprocess.Popen(gunicorn_cmd)
+
+    gunicorn_process.wait()
+    nginx_process.terminate()
+    nginx_process.wait()
 
 
 @command(command_type=CommandType.PYTHON, parser_opts={"help": "Start development server"})
@@ -47,7 +55,7 @@ def development(*args, **kwargs):
     StatReload(get_logger("debug")).run(
         uvicorn.run,
         {
-            "app": "goobox_nodes.app:app",
+            "app": os.environ["STARLETTE_APP"],
             "host": os.environ["APP_HOST"],
             "port": int(os.environ["APP_PORT"]),
             "debug": True,

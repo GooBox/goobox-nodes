@@ -47,8 +47,9 @@ def build(*args, **kwargs):
         "labels": ['maintainer="GooBox <perdy@perdy.io>"'],
         "project": APP,
         "app": APP.replace("-", "_"),
-        "runtime_packages": ["supervisor", "nginx"],
+        "runtime_packages": ["nginx"],
         "build_packages": ["build-essential"],
+        "meta_files": ["alembic.ini", "setup.cfg", "nginx.conf"],
         "production": kwargs["production"],
     }
 

@@ -38,7 +38,7 @@ RUN apt-get update && \
 RUN mkdir -p $APP_DIR $LOG_DIR
 
 # Copy application
-COPY alembic.ini setup.cfg $PROJECT_DIR/
+COPY {{ meta_files|join(" ") }} $PROJECT_DIR/
 COPY {{ app }} $APP_DIR/
 {% if not production -%}
   COPY tests/ $PROJECT_DIR/tests/

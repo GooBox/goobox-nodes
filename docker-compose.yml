@@ -2,7 +2,7 @@ version: '3'
 services:
   api:
     image: goobox/goobox-nodes:latest
-    command: ["development"]
+    command: ["start"]
     ports:
       - "8000:8000"
     environment:
